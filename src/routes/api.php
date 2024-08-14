@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Airport\Domains\Airport\Controllers\Controller as AirportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +17,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('/test', function (Request $request) {
+    return response()->json([
+        'message' => 'Hello World',
+        'data' => [
+            'ip' => $request->ip(),
+        ]
+    ]);
+});
+
+Route::prefix('v1')->group(function (): void {
+    Route::prefix('airport')->name('airport-')->group(function (): void {
+        Route::get('/search', [AirportController::class, 'search'])->name('search');
+    });
 });
