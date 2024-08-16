@@ -2,22 +2,18 @@
 
 namespace Airport\Domain\Airport\Core\Handlers;
 
+use Airport\Domain\Airport\Core\Queries\Query;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Storage;
 
 final readonly class SearchHandler
 {
+    public function __construct(
+        private Query $query
+    ) {
+    }
+
     public function handle(string $searchValue): Collection
     {
-        $json = Storage::disk('public')->get('airports.json');
-        $airports = json_decode($json, true);
-        foreach ($airports as $key => $airport)
-        {
-            var_dump($key);
-            var_dump($airport);
-
-        }
-
-        return Collection::make();
+        return $this->query->search($searchValue)->get();
     }
 }
